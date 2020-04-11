@@ -18,11 +18,15 @@ class SignIn extends Component {
   };
 
   onClick = (event) => {
+    const {
+      user: { password, email },
+    } = this.state;
     event.preventDefault();
     let getUsers = load("users") || [];
-    console.log(getUsers);
     getUsers.forEach((user) => {
-      console.log(user);
+      if (user.email === email && user.password === password) {
+        console.log("success");
+      }
     });
   };
 
