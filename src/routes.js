@@ -13,7 +13,7 @@ export const Routes = () => {
   }
 
   return (
-    <Router>
+    <Router basename="cursor-form">
       <Switch>
         <Layout isAuth={isAuth}>
           <Route exact path="/">
