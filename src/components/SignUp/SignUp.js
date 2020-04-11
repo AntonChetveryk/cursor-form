@@ -1,9 +1,33 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Link } from "react-router-dom";
+import { save, load } from "../../helpers/localStorage";
 
 class SignUp extends Component {
+  state = {
+    user: { firstName: "", lastName: "", password: "", email: "" },
+  };
+
+  onChange = (event) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        [event.target.name]: event.target.value,
+      },
+    });
+  };
+
+  onClick = (event) => {
+    event.preventDefault();
+    let getUsers = load("users") || [];
+    save("users", [...getUsers, { ...this.state.user }]);
+  };
+
   render() {
+    const {
+      user: { firstName, lastName, password, email },
+    } = this.state;
+
     return (
       <div className="container">
         <h1 className="text-center mb-4">Sign up</h1>
@@ -15,14 +39,18 @@ class SignUp extends Component {
                 name="firstName"
                 id="firstName"
                 placeholder="First name*"
+                value={firstName}
+                onChange={this.onChange}
               />
             </FormGroup>
             <FormGroup>
               <Input
                 type="text"
-                name="lasttName"
-                id="lasttName"
+                name="lastName"
+                id="lastName"
                 placeholder="Last name*"
+                value={lastName}
+                onChange={this.onChange}
               />
             </FormGroup>
           </div>
@@ -32,6 +60,8 @@ class SignUp extends Component {
               name="email"
               id="email"
               placeholder="Email address*"
+              value={email}
+              onChange={this.onChange}
             />
           </FormGroup>
           <FormGroup>
@@ -40,6 +70,8 @@ class SignUp extends Component {
               name="password"
               id="password"
               placeholder="Password*"
+              value={password}
+              onChange={this.onChange}
             />
           </FormGroup>
 
@@ -53,7 +85,9 @@ class SignUp extends Component {
             </Label>
           </FormGroup>
           <div className="d-flex justify-content-center">
-            <Button className="my-4 btn">SIGN UP</Button>
+            <Button className="my-4 btn" onClick={this.onClick}>
+              SIGN UP
+            </Button>
           </div>
           <div className="d-flex justify-content-end">
             <Link to="/">SIGN IN</Link>

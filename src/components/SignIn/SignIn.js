@@ -1,8 +1,32 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Link } from "react-router-dom";
+import { load } from "../../helpers/localStorage";
+
+let getUsers = load("users") || [];
 
 class SignIn extends Component {
+  state = {
+    user: { password: "", email: "" },
+  };
+
+  onChange = (event) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        [event.target.name]: event.target.value,
+      },
+    });
+  };
+
+  onClick = (event) => {
+    event.preventDefault();
+    console.log(getUsers);
+    getUsers.forEach((user) => {
+      console.log(user);
+    });
+  };
+
   render() {
     return (
       <div className="container">
@@ -14,6 +38,7 @@ class SignIn extends Component {
               name="email"
               id="email"
               placeholder="Email address*"
+              onChange={this.onChange}
             />
           </FormGroup>
           <FormGroup>
@@ -22,6 +47,7 @@ class SignIn extends Component {
               name="password"
               id="password"
               placeholder="Password*"
+              onChange={this.onChange}
             />
           </FormGroup>
 
@@ -31,7 +57,9 @@ class SignIn extends Component {
             </Label>
           </FormGroup>
           <div className="d-flex justify-content-center">
-            <Button className="my-4 btn">SIGN IN</Button>
+            <Button className="my-4 btn" onClick={this.onClick}>
+              SIGN IN
+            </Button>
           </div>
 
           <div className="d-flex justify-content-between">
