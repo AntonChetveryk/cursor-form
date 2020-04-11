@@ -3,8 +3,6 @@ import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Link } from "react-router-dom";
 import { load } from "../../helpers/localStorage";
 
-let getUsers = load("users") || [];
-
 class SignIn extends Component {
   state = {
     user: { password: "", email: "" },
@@ -21,6 +19,7 @@ class SignIn extends Component {
 
   onClick = (event) => {
     event.preventDefault();
+    let getUsers = load("users") || [];
     console.log(getUsers);
     getUsers.forEach((user) => {
       console.log(user);
