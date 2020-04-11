@@ -21,3 +21,8 @@ span {
 .copyright {
   color: darkgray;
 }
+
+.error {
+  color: red;
+  font-size: smaller;
+}

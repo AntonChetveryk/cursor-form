@@ -6,6 +6,7 @@ import { load } from "../../helpers/localStorage";
 class SignIn extends Component {
   state = {
     user: { password: "", email: "" },
+    errors: {},
   };
 
   onChange = (event) => {
@@ -17,21 +18,53 @@ class SignIn extends Component {
     });
   };
 
-  onClick = (event) => {
+  validation = (errors) => {
     const {
       user: { password, email },
     } = this.state;
 
+    if (!/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(email)) {
+      errors.email = "Ivalid email";
+    }
+
+    if (password < 4) {
+      errors.password = "Must be 4 characters or more";
+    }
+  };
+
+  onClick = (event) => {
     event.preventDefault();
-    let getUsers = load("users") || [];
-    getUsers.forEach((user) => {
-      if (user.email === email && user.password === password) {
+    const {
+      user: { password, email },
+    } = this.state;
+    const errors = {};
+    this.validation(errors);
+
+    if (Object.keys(errors).length > 0) {
+      this.setState({
+        errors: errors,
+      });
+    } else {
+      this.setState({
+        errors: {},
+      });
+      let getUsers = load("users") || [];
+
+      if (
+        getUsers.some(
+          (user) => user.email === email && user.password === password
+        )
+      ) {
         this.props.changeIsAuth();
+      } else {
+        alert("Wrong password or email");
       }
-    });
+    }
   };
 
   render() {
+    const { errors } = this.state;
+
     return (
       <div className="container">
         <h1 className="text-center mb-4">Sign in</h1>
@@ -44,6 +77,9 @@ class SignIn extends Component {
               placeholder="Email address*"
               onChange={this.onChange}
             />
+            {errors.email ? (
+              <div className="error mt-2">{errors.email}</div>
+            ) : null}
           </FormGroup>
           <FormGroup>
             <Input
@@ -53,6 +89,9 @@ class SignIn extends Component {
               placeholder="Password*"
               onChange={this.onChange}
             />
+            {errors.password ? (
+              <div className="error">{errors.password}</div>
+            ) : null}
           </FormGroup>
 
           <FormGroup check>

@@ -6,6 +6,7 @@ import { save, load } from "../../helpers/localStorage";
 class SignUp extends Component {
   state = {
     user: { firstName: "", lastName: "", password: "", email: "" },
+    errors: {},
   };
 
   onChange = (event) => {
@@ -17,15 +18,54 @@ class SignUp extends Component {
     });
   };
 
+  validation = (errors) => {
+    const {
+      user: { lastName, firstName, password, email },
+    } = this.state;
+
+    if (!/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(email)) {
+      errors.email = "Ivalid email";
+    }
+    if (firstName.length < 3) {
+      errors.firstName = "Must be 3 characters or more";
+    }
+
+    if (lastName.length < 3) {
+      errors.lastName = "Must be 3 characters or more";
+    }
+
+    if (password < 4) {
+      errors.password = "Must be 4 characters or more";
+    }
+  };
+
   onClick = (event) => {
     event.preventDefault();
+    const errors = {};
     let getUsers = load("users") || [];
-    save("users", [...getUsers, { ...this.state.user }]);
+    this.validation(errors);
+
+    if (Object.keys(errors).length > 0) {
+      this.setState({
+        errors: errors,
+      });
+    } else {
+      this.setState({
+        errors: {},
+      });
+      if (getUsers.some((user) => user.email === this.state.user.email)) {
+        alert("This email already exist");
+      } else {
+        save("users", [...getUsers, { ...this.state.user }]);
+        alert("You have successfully registered!");
+      }
+    }
   };
 
   render() {
     const {
       user: { firstName, lastName, password, email },
+      errors,
     } = this.state;
 
     return (
@@ -42,6 +82,9 @@ class SignUp extends Component {
                 value={firstName}
                 onChange={this.onChange}
               />
+              {errors.firstName ? (
+                <div className="error">{errors.firstName}</div>
+              ) : null}
             </FormGroup>
             <FormGroup>
               <Input
@@ -52,6 +95,9 @@ class SignUp extends Component {
                 value={lastName}
                 onChange={this.onChange}
               />
+              {errors.lastName ? (
+                <div className="error">{errors.lastName}</div>
+              ) : null}
             </FormGroup>
           </div>
           <FormGroup>
@@ -63,6 +109,9 @@ class SignUp extends Component {
               value={email}
               onChange={this.onChange}
             />
+            {errors.email ? (
+              <div className="error mt-2">{errors.email}</div>
+            ) : null}
           </FormGroup>
           <FormGroup>
             <Input
@@ -73,6 +122,9 @@ class SignUp extends Component {
               value={password}
               onChange={this.onChange}
             />
+            {errors.password ? (
+              <div className="error">{errors.password}</div>
+            ) : null}
           </FormGroup>
 
           <FormGroup check>
