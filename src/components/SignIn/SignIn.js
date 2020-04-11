@@ -21,11 +21,12 @@ class SignIn extends Component {
     const {
       user: { password, email },
     } = this.state;
+
     event.preventDefault();
     let getUsers = load("users") || [];
     getUsers.forEach((user) => {
       if (user.email === email && user.password === password) {
-        console.log("success");
+        this.props.changeIsAuth();
       }
     });
   };

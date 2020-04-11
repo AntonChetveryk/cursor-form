@@ -1,14 +1,11 @@
 import React from "react";
 
 class Layout extends React.Component {
-  state = {
-    isAuth: false,
-  };
-
   render() {
+    const { isAuth } = this.props;
     return (
       <div className="Layout">
-        {this.state.isAuth ? (
+        {isAuth ? (
           <h1>Hello my friend!!!!</h1>
         ) : (
           <div
