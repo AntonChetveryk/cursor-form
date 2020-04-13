@@ -24,17 +24,21 @@ class SignUp extends Component {
       },
       () => {
         this.validation(errors);
-        if (Object.keys(errors).length > 0) {
-          this.setState((state) => {
+
+        this.setState(
+          (state) => {
             return {
               errors: {
                 ...state.errors,
                 [event.target.name]: errors[event.target.name],
               },
             };
-          });
-        } else {
-        }
+          },
+          () =>
+            this.state.errors[event.target.name]
+              ? (event.target.style.border = "1px solid red")
+              : (event.target.style.border = "1px solid green")
+        );
       }
     );
   };
