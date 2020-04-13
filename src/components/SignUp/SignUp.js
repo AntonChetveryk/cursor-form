@@ -10,12 +10,33 @@ class SignUp extends Component {
   };
 
   onChange = (event) => {
-    this.setState({
-      user: {
-        ...this.state.user,
-        [event.target.name]: event.target.value,
+    event.persist();
+    const errors = {};
+
+    this.setState(
+      (state) => {
+        return {
+          user: {
+            ...state.user,
+            [event.target.name]: event.target.value,
+          },
+        };
       },
-    });
+      () => {
+        this.validation(errors);
+        if (Object.keys(errors).length > 0) {
+          this.setState((state) => {
+            return {
+              errors: {
+                ...state.errors,
+                [event.target.name]: errors[event.target.name],
+              },
+            };
+          });
+        } else {
+        }
+      }
+    );
   };
 
   validation = (errors) => {
@@ -24,7 +45,7 @@ class SignUp extends Component {
     } = this.state;
 
     if (!/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(email)) {
-      errors.email = "Ivalid email";
+      errors.email = "Invalid email";
     }
     if (firstName.length < 3) {
       errors.firstName = "Must be 3 characters or more";
@@ -34,8 +55,8 @@ class SignUp extends Component {
       errors.lastName = "Must be 3 characters or more";
     }
 
-    if (password < 4) {
-      errors.password = "Must be 4 characters or more";
+    if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(password)) {
+      errors.password = "Wrong password";
     }
   };
 
