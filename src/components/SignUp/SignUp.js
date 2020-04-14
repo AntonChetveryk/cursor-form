@@ -5,7 +5,13 @@ import { save, load } from "../../helpers/localStorage";
 
 class SignUp extends Component {
   state = {
-    user: { firstName: "", lastName: "", password: "", email: "" },
+    user: {
+      firstName: "",
+      lastName: "",
+      password: "",
+      email: "",
+      isChecked: false,
+    },
     errors: {},
   };
 
@@ -34,6 +40,7 @@ class SignUp extends Component {
               },
             };
           },
+
           () =>
             this.state.errors[event.target.name]
               ? (event.target.style.border = "1px solid red")
@@ -43,25 +50,13 @@ class SignUp extends Component {
     );
   };
 
-  validation = (errors) => {
-    const {
-      user: { lastName, firstName, password, email },
-    } = this.state;
-
-    if (!/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(email)) {
-      errors.email = "Invalid email";
-    }
-    if (firstName.length < 3) {
-      errors.firstName = "Must be 3 characters or more";
-    }
-
-    if (lastName.length < 3) {
-      errors.lastName = "Must be 3 characters or more";
-    }
-
-    if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(password)) {
-      errors.password = "Wrong password";
-    }
+  onChangeIsChecked = (e) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        isChecked: e.target.checked,
+      },
+    });
   };
 
   onClick = (event) => {
@@ -87,9 +82,30 @@ class SignUp extends Component {
     }
   };
 
+  validation = (errors) => {
+    const {
+      user: { lastName, firstName, password, email },
+    } = this.state;
+
+    if (!/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i.test(email)) {
+      errors.email = "Invalid email";
+    }
+    if (firstName.length < 3) {
+      errors.firstName = "Must be 3 characters or more";
+    }
+
+    if (lastName.length < 3) {
+      errors.lastName = "Must be 3 characters or more";
+    }
+
+    if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(password)) {
+      errors.password = "Wrong password";
+    }
+  };
+
   render() {
     const {
-      user: { firstName, lastName, password, email },
+      user: { firstName, lastName, password, email, isChecked },
       errors,
     } = this.state;
 
@@ -154,7 +170,11 @@ class SignUp extends Component {
 
           <FormGroup check>
             <Label check className="d-flex align-items-center">
-              <Input type="checkbox" />
+              <Input
+                type="checkbox"
+                checked={isChecked}
+                onChange={this.onChangeIsChecked}
+              />
               <span className="text-center mt-2">
                 I want to receive inspiration, marketing promotion and updates
                 via email
