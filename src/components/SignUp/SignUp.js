@@ -110,6 +110,13 @@ class SignUp extends Component {
                 placeholder="First name*"
                 value={firstName}
                 onChange={this.onChange}
+                className={
+                  this.isEmptyValue("firstName")
+                    ? null
+                    : errors.firstName
+                    ? "inValid"
+                    : "valid"
+                }
               />
               {errors.firstName ? (
                 <div className="error">{errors.firstName}</div>

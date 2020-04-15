@@ -28,11 +28,11 @@ span {
 }
 
 .inValid {
-  border: "1px solid red";
-  background-color: darkred;
+  border-color: "1px solid red";
+  background-color: darksalmon;
 }
 
 .valid {
-  border: "1px solid green";
-  background-color: darkgreen;
+  border-color: "1px solid green";
+  background-color: lightgreen;
 }
