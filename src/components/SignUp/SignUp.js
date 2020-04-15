@@ -130,6 +130,13 @@ class SignUp extends Component {
                 placeholder="Last name*"
                 value={lastName}
                 onChange={this.onChange}
+                className={
+                  this.isEmptyValue("lastName")
+                    ? null
+                    : errors.lastName
+                    ? "inValid"
+                    : "valid"
+                }
               />
               {errors.lastName ? (
                 <div className="error">{errors.lastName}</div>
@@ -144,6 +151,13 @@ class SignUp extends Component {
               placeholder="Email address*"
               value={email}
               onChange={this.onChange}
+              className={
+                this.isEmptyValue("email")
+                  ? null
+                  : errors.email
+                  ? "inValid"
+                  : "valid"
+              }
             />
             {errors.email ? (
               <div className="error mt-2">{errors.email}</div>
@@ -157,6 +171,13 @@ class SignUp extends Component {
               placeholder="Password*"
               value={password}
               onChange={this.onChange}
+              className={
+                this.isEmptyValue("password")
+                  ? null
+                  : errors.password
+                  ? "inValid"
+                  : "valid"
+              }
             />
             {errors.password ? (
               <div className="error">{errors.password}</div>
