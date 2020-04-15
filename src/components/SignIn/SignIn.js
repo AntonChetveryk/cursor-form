@@ -18,7 +18,8 @@ class SignIn extends Component {
     });
   };
 
-  validation = (errors) => {
+  isValid = () => {
+    const errors = {};
     const {
       user: { password, email },
     } = this.state;
@@ -30,6 +31,7 @@ class SignIn extends Component {
     if (password < 4) {
       errors.password = "Must be 4 characters or more";
     }
+    return errors;
   };
 
   onClick = (event) => {
@@ -37,8 +39,7 @@ class SignIn extends Component {
     const {
       user: { password, email },
     } = this.state;
-    const errors = {};
-    this.validation(errors);
+    const errors = this.isValid();
 
     if (Object.keys(errors).length > 0) {
       this.setState({
@@ -48,17 +49,11 @@ class SignIn extends Component {
       this.setState({
         errors: {},
       });
-      let getUsers = load("users") || [];
+      let getUser = load("user");
 
-      if (
-        getUsers.some(
-          (user) => user.email === email && user.password === password
-        )
-      ) {
-        this.props.changeIsAuth();
-      } else {
-        alert("Wrong password or email");
-      }
+      getUser.email === email && getUser.password === password
+        ? this.props.changeIsAuth()
+        : alert("Wrong password or email");
     }
   };
 

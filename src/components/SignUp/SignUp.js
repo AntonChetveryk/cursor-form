@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Button, Form, FormGroup, Label, Input } from "reactstrap";
 import { Link } from "react-router-dom";
-import { save, load } from "../../helpers/localStorage";
+import { save } from "../../helpers/localStorage";
 
 class SignUp extends Component {
   state = {
@@ -15,37 +15,26 @@ class SignUp extends Component {
     errors: {},
   };
 
-  onChange = (event) => {
-    event.persist();
-    const errors = {};
+  onChange = (e) => {
+    const { name, value } = e.target;
 
     this.setState(
       (state) => {
         return {
           user: {
             ...state.user,
-            [event.target.name]: event.target.value,
+            [name]: value,
           },
         };
       },
       () => {
-        this.validation(errors);
-
-        this.setState(
-          (state) => {
-            return {
-              errors: {
-                ...state.errors,
-                [event.target.name]: errors[event.target.name],
-              },
-            };
+        const errors = this.isValid();
+        this.setState({
+          errors: {
+            ...this.state.errors,
+            [name]: errors[name],
           },
-
-          () =>
-            this.state.errors[event.target.name]
-              ? (event.target.style.border = "1px solid red")
-              : (event.target.style.border = "1px solid green")
-        );
+        });
       }
     );
   };
@@ -61,9 +50,7 @@ class SignUp extends Component {
 
   onClick = (event) => {
     event.preventDefault();
-    const errors = {};
-    let getUsers = load("users") || [];
-    this.validation(errors);
+    const errors = this.isValid();
 
     if (Object.keys(errors).length > 0) {
       this.setState({
@@ -73,16 +60,14 @@ class SignUp extends Component {
       this.setState({
         errors: {},
       });
-      if (getUsers.some((user) => user.email === this.state.user.email)) {
-        alert("This email already exist");
-      } else {
-        save("users", [...getUsers, { ...this.state.user }]);
-        alert("You have successfully registered!");
-      }
+
+      save("user", { ...this.state.user });
+      alert("You have successfully registered!");
     }
   };
 
-  validation = (errors) => {
+  isValid = () => {
+    const errors = {};
     const {
       user: { lastName, firstName, password, email },
     } = this.state;
@@ -101,7 +86,10 @@ class SignUp extends Component {
     if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/.test(password)) {
       errors.password = "Wrong password";
     }
+    return errors;
   };
+
+  isEmptyValue = (value) => this.state.user[value].length === 0;
 
   render() {
     const {
